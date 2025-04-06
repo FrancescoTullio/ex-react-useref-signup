@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function App() {
   const optionSpec = ["Full Stack", "Frontend", "Backend"];
 
   const defaultForm = {
-    fullName: "",
     userName: "",
     password: "",
-    specializzation: "",
-    anzianity: "",
     biograpy: ""
   };
 
@@ -36,6 +33,9 @@ function App() {
 
   const [formData, setFormData] = useState(defaultForm);
   const [val, setVal] = useState(validationObj)
+  const fullNameRef = useRef()
+  const anzianityRef = useRef()
+  const specRef = useRef()
 
 
 
@@ -133,12 +133,16 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (formData.fullName.trim() && formData.userName.trim() && formData.password.trim() && formData.specializzation && formData.anzianity >= 0 && formData.biograpy) {
-      console.log(formData);
-    } else {
-      console.log("qualcosa non va nel form");
 
-    }
+      if(val.bioVal && val.passVal && val.userVal && fullNameRef.current.value && anzianityRef.current.value >= 0 && specRef.current.value){
+        const newFormData = {
+          ...formData, fullName : fullNameRef.current.value, anzianity : anzianityRef.current.value, specializzation : specRef.current.value
+        }
+        console.log(newFormData);
+        
+      } else {
+        console.error("problemi nella compilazione del form")
+      }
 
   };
 
@@ -153,8 +157,7 @@ function App() {
               type="text"
               className="form-control"
               name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
+              ref={fullNameRef}
             />
           </div>
           <div className="mb-3">
@@ -194,8 +197,7 @@ function App() {
             <select
               className="form-select"
               name="specializzation"
-              value={formData.specializzation}
-              onChange={handleChange}
+              ref={specRef}
             >
               <option value="">Seleziona una specializzazione</option>
               {optionSpec.map((curElem, i) => (
@@ -211,8 +213,7 @@ function App() {
               type="number"
               className="form-control"
               name="anzianity"
-              value={formData.anzianity}
-              onChange={handleChange}
+              ref={anzianityRef}
             />
           </div>
           <div className="mb-3">
